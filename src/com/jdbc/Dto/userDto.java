@@ -8,12 +8,26 @@ public class userDto {
     public userDto() {
     }
 
+    public userDto(int id) {
+        this.id = id;
+    }
+
+    public userDto(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public userDto(int id, String password) {
+        this.id = id;
+        this.password = password;
+    }
 
     public userDto(int id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
     }
+
 
     public int getId() {
         return id;

@@ -17,13 +17,40 @@ public class userDao {
     public int insertIntoUser(userDto userDto) {
         int i = 0;
         try {
-            String sql = "inset into User(username,password) values(?,?)";
+            String sql = "insert into User(username,password) values(?,?)";
             Object[] params = {userDto.getUsername(), userDto.getPassword()};
             QueryRunner queryRunner = new QueryRunner(DruidUtils.dataSource());
 
             i = queryRunner.update(sql, params);
         } catch (SQLException s) {
             s.printStackTrace();
+        }
+        return i;
+    }
+
+    public int updateUser(userDto userDto) {
+        int i = 0;
+        try {
+            String sql = "update User set password=? where id=?;";
+            Object params[] = {userDto.getPassword(), userDto.getId()};
+
+            QueryRunner queryRunner = new QueryRunner(DruidUtils.dataSource());
+            i = queryRunner.update(sql, params);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return i;
+    }
+
+    public int deleteUser(userDto userDto) {
+        int i =0;
+        try {
+            String sql = "delete from User where id=?";
+            QueryRunner queryRunner = new QueryRunner(DruidUtils.dataSource());
+            i= queryRunner.update(sql, userDto.getId());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return i;
     }
