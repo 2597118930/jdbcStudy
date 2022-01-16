@@ -54,4 +54,12 @@ public class userDaoTest {
             System.out.println(userDto);
         }
     }
+
+    @Test
+    public void getconnt(){
+
+        int connt=userDao.getconnt();
+        System.out.println(connt);
+
+    }
 }

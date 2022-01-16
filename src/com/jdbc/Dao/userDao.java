@@ -6,13 +6,12 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Handler;
 
 public class userDao {
     private PreparedStatement preparedStatement;
@@ -115,7 +114,7 @@ public class userDao {
             String sql = "select id,username,password from User where username=?";
 
             QueryRunner queryRunner = new QueryRunner(DruidUtils.dataSource());
-            list =queryRunner.query(sql,new BeanListHandler<userDto>(userDto.class),username);
+            list = queryRunner.query(sql, new BeanListHandler<userDto>(userDto.class), username);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -123,6 +122,28 @@ public class userDao {
 
         return list;
     }
+
+
+    //返回一条数据
+    public int getconnt() {
+        int count = 0;
+
+        String sql = "select count(1) from User";
+
+        QueryRunner queryRunner = new QueryRunner(DruidUtils.dataSource());
+
+        ScalarHandler<Long> scalarHandler = new ScalarHandler<Long>();
+        try {
+            long l = queryRunner.query(sql, scalarHandler);
+            count = (int) l;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return count;
+    }
+
 
 }
 
