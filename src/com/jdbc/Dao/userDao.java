@@ -3,14 +3,18 @@ package com.jdbc.Dao;
 import com.jdbc.utils.DruidUtils;
 import com.jdbc.Dto.userDto;
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Handler;
 
 public class userDao {
-    private Connection connection = DruidUtils.getConnection();
     private PreparedStatement preparedStatement;
     private ResultSet resultSet;
 
@@ -44,15 +48,81 @@ public class userDao {
     }
 
     public int deleteUser(userDto userDto) {
-        int i =0;
+        int i = 0;
         try {
             String sql = "delete from User where id=?";
             QueryRunner queryRunner = new QueryRunner(DruidUtils.dataSource());
-            i= queryRunner.update(sql, userDto.getId());
+            i = queryRunner.update(sql, userDto.getId());
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return i;
     }
+
+    //查询一条记录
+    public userDto queryData(String username) {
+        userDto userDto = null;
+
+        try {
+            String sql = "select id Id,username username,password password from User where username=?";
+            QueryRunner queryRunner = new QueryRunner(DruidUtils.dataSource());
+            userDto = queryRunner.query(sql, new BeanHandler<userDto>(userDto.class), username);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return userDto;
+    }
+
+    //自定义ResultSetHandle结果数据
+    public userDto queryDatas(String username) {
+        userDto userDto = null;
+
+        try {
+            String sql = "select id Id,username username,password password from User where username=?;";
+
+            QueryRunner queryRunner = new QueryRunner(DruidUtils.dataSource());
+
+            ResultSetHandler<userDto> resultSetHandler = new ResultSetHandler<userDto>() {
+                @Override
+                public userDto handle(ResultSet resultSet) throws SQLException {
+                    userDto userDto = null;
+                    if (resultSet.next()) {
+                        int id = resultSet.getInt("id");
+                        String username = resultSet.getString("username");
+                        String password = resultSet.getString("password");
+
+                        userDto = new userDto(id, username, password);
+                    }
+                    return userDto;
+                }
+            };
+
+            userDto = queryRunner.query(sql, resultSetHandler, username);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return userDto;
+    }
+
+
+    //查询多条数据
+    public List<userDto> queryListDatas(String username) {
+        List<userDto> list = null;
+
+        try {
+            String sql = "select id,username,password from User where username=?";
+
+            QueryRunner queryRunner = new QueryRunner(DruidUtils.dataSource());
+            list =queryRunner.query(sql,new BeanListHandler<userDto>(userDto.class),username);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
 }
 
