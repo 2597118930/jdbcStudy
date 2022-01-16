@@ -27,14 +27,15 @@ public class DruidUtils {
             e.printStackTrace();
         }
     }
-    public  static DataSource dataSource(){
+
+    public static DataSource dataSource() {
         return druidDataSource;
     }
 
-    public static Connection getConnection (){
-        Connection connection=null;
+    public static Connection getConnection() {
+        Connection connection = null;
         try {
-            connection=druidDataSource.getConnection();
+            connection = druidDataSource.getConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -42,8 +43,8 @@ public class DruidUtils {
 
     }
 
-    public static void main(String[] args) {
-        System.out.println(getConnection());
-    }
+//    public static void main(String[] args) {
+//        System.out.println(getConnection());
+//    }
 
 }
